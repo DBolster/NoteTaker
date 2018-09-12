@@ -17,7 +17,7 @@ public class View {
 		if (args.length > 2) {
 			System.out.println("Too many arguments, for help type NoteTaker -h");
 		} else if (args.length < 1) {
-			System.out.println("To use NoteTaker please enter a command:");
+			System.out.println("Not enough arguments, please refer to help");
 			mainControl.showHelp();
 		} else {
 			switch (args[0]) {

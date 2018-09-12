@@ -11,11 +11,11 @@ import java.util.Scanner;
 
 public class Controller {
 
-	String fileName = "courses.txt";
-	
+	final String fileName = "courses.txt";
+	File myFile = new File(fileName);
+
 	public Controller() {
-		
-		File myFile = new File(fileName);
+		//File myFile = new File(fileName);
 		if (!myFile.exists())
 			try {
 				myFile.createNewFile();
@@ -26,25 +26,28 @@ public class Controller {
 
 	public void addCourse(String course) {
 		System.out.println("In course creation area");
-		try {
-			System.out.println("in dupe checker");
-			Scanner dupeScanner = new Scanner(fileName);
-			String courseToCheck = course + 
-			String readFile = "";
 
+		System.out.println("in dupe checker");
+		String courseToMatch = "";
+		//Scanner dupeScanner;
+		try {
+			Scanner dupeScanner = new Scanner(myFile);
 			
-			System.out.println(readFile);
-			
+			while (dupeScanner.hasNextLine()) {
+				courseToMatch = dupeScanner.nextLine();
+				if (course.equals(courseToMatch)) {
+					System.out.println("Course already in file");
+					return;
+				}
+			}
 		} catch (FileNotFoundException e1) {
 			System.out.println("File " + fileName + " not found");
-			
-		} catch (IOException e1) {
-			System.out.println("IO error opening file " + fileName + ", please try again");
-			
-		};
+		}
+		// String courseToCheck = course + "\r\n";
 		
-		// InputStreamReader myInput = new InputStreamReader(System.in);
-		// BufferedReader myReader = new BufferedReader(myInput);
+
+		
+
 		String courseNewLine;
 		try (FileWriter fileWrite = new FileWriter(fileName, true)) {
 			courseNewLine = course + "\r\n"; // add newline

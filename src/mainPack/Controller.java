@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Date;
 import java.util.Scanner;
 //import java.io.InputStreamReader;
 
@@ -15,7 +16,7 @@ public class Controller {
 	File myFile = new File(fileName);
 
 	public Controller() {
-		//File myFile = new File(fileName);
+		// File myFile = new File(fileName);
 		if (!myFile.exists())
 			try {
 				myFile.createNewFile();
@@ -29,10 +30,10 @@ public class Controller {
 
 		System.out.println("in dupe checker");
 		String courseToMatch = "";
-		//Scanner dupeScanner;
+		// Scanner dupeScanner;
 		try {
 			Scanner dupeScanner = new Scanner(myFile);
-			
+
 			while (dupeScanner.hasNextLine()) {
 				courseToMatch = dupeScanner.nextLine();
 				if (course.equals(courseToMatch)) {
@@ -44,9 +45,6 @@ public class Controller {
 			System.out.println("File " + fileName + " not found");
 		}
 		// String courseToCheck = course + "\r\n";
-		
-
-		
 
 		String courseNewLine;
 		try (FileWriter fileWrite = new FileWriter(fileName, true)) {
@@ -65,8 +63,41 @@ public class Controller {
 		return;
 	}
 
-	public void createNote(String string) {
-		System.out.println("New note area");
+	public void createNote(String courseName) {
+
+		//Check for course in courses.txt
+		try {
+			Scanner dupeScanner = new Scanner(myFile);
+			while (dupeScanner.hasNextLine()) {
+				String existingCourseName = dupeScanner.nextLine();
+				if (!courseName.equals(existingCourseName)) {
+					System.out.println("Course " + courseName + " not found, please add course");
+					return;
+				}
+			}
+		} catch (FileNotFoundException e1) {
+			System.out.println("File " + fileName + " not found");
+		}
+
+		//Set Course Note name
+		Date date = java.util.Calendar.getInstance().getTime();
+		String courseNoteName = date + " " + courseName;
+		
+		//Create Note File
+		File courseNotes = new File(courseNoteName);
+		try {
+			courseNotes.createNewFile();
+		} catch (IOException e1) {
+			System.out.println("Cannot create note file");
+		}
+		
+		//Write Date header to course file
+		try (FileWriter fileWrite = new FileWriter(fileName, true)) {
+			fileWrite.write(courseNoteName);
+		} catch (IOException ex) {
+			System.out.println("Cannot write to file " + courseNoteName);
+		}
+
 		return;
 	}
 

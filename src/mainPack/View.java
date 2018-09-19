@@ -3,7 +3,7 @@ package mainPack;
 public class View {
 
 	public View() {
-
+		// empty constructor
 	}
 
 	public static void main(String[] args) {
@@ -52,5 +52,6 @@ public class View {
 
 			}
 		}
+		System.exit(0);
 	}
 }

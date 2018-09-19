@@ -102,8 +102,11 @@ public class Controller {
 		if (exists) {
 			// Set Course Note name
 			Calendar date = Calendar.getInstance();
-			String courseNoteName = courseName + "_"+ date.get(Calendar.DAY_OF_MONTH) + "_";
-			courseNoteName = courseNoteName.replace(" ", "");
+			//use getDisplayName() here
+			String courseNoteName = courseName + "_"+ date.getDisplayName(Calendar.DAY_OF_MONTH, Calendar.SHORT_FORMAT, Calendar.) + 
+					"_" + date.get(Calendar.MONTH) + "_" + date.get(Calendar.HOUR) + 
+					date.get(Calendar.MINUTE) + date.get);
+			//courseNoteName = courseNoteName.replace(" ", "");
 			//URI courseNoteURI = null;
 
 //			try {
@@ -112,7 +115,7 @@ public class Controller {
 //				System.out.println("URI syntax error");
 //				System.exit(-1);
 //			}
-			File courseNotes = new File(courseNoteName);
+			File courseNotes = new File(courseNoteName + ".txt");
 
 			// Create Note File
 			if (!courseNotes.exists()) {

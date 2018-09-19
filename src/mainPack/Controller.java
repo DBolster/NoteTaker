@@ -65,40 +65,45 @@ public class Controller {
 
 	public void createNote(String courseName) {
 
-		//Check for course in courses.txt
+		boolean exists = false;
+		// Check for course in courses.txt
 		try {
 			Scanner dupeScanner = new Scanner(myFile);
 			while (dupeScanner.hasNextLine()) {
 				String existingCourseName = dupeScanner.nextLine();
-				if (!courseName.equals(existingCourseName)) {
-					System.out.println("Course " + courseName + " not found, please add course");
-					return;
+				if (courseName.equals(existingCourseName)) {
+					exists = true;
 				}
 			}
 		} catch (FileNotFoundException e1) {
 			System.out.println("File " + fileName + " not found");
 		}
 
-		//Set Course Note name
-		Date date = java.util.Calendar.getInstance().getTime();
-		String courseNoteName = date + " " + courseName;
-		
-		//Create Note File
-		File courseNotes = new File(courseNoteName);
-		try {
-			courseNotes.createNewFile();
-		} catch (IOException e1) {
-			System.out.println("Cannot create note file");
-		}
-		
-		//Write Date header to course file
-		try (FileWriter fileWrite = new FileWriter(fileName, true)) {
-			fileWrite.write(courseNoteName);
-		} catch (IOException ex) {
-			System.out.println("Cannot write to file " + courseNoteName);
-		}
+		if (exists) {
+			// Set Course Note name
+			Date date = java.util.Calendar.getInstance().getTime();
+			String courseNoteName = date + " " + courseName + ".txt";
 
-		return;
+			// Create Note File
+			File courseNotes = new File(courseNoteName);
+			try {
+				courseNotes.createNewFile();
+			} catch (IOException e1) {
+				System.out.println("Cannot create note file");
+			}
+
+			// Write Date header to course file
+			try (FileWriter fileWrite = new FileWriter(fileName, true)) {
+				fileWrite.write(courseNoteName);
+			} catch (IOException ex) {
+				System.out.println("Cannot write to file " + courseNoteName);
+			}
+
+			return;
+		} else {
+			System.out.println("Course " + courseName + " not found, please add course");
+			return;
+		}
 	}
 
 	public void showHelp() {

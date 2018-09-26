@@ -92,7 +92,7 @@ public class Controller {
 		return;
 	}
 
-	public void newNote(String courseName) {
+	public void newNote(String courseNameParameter) {
 
 		boolean exists = false;
 
@@ -102,7 +102,7 @@ public class Controller {
 
 			while (dupeScanner.hasNextLine()) {
 				String existingCourseName = dupeScanner.nextLine();
-				if (courseName.equals(existingCourseName)) {
+				if (courseNameParameter.equals(existingCourseName)) {
 					exists = true;
 					break;
 				}
@@ -124,40 +124,41 @@ public class Controller {
 					.withLocale(locale);
 			String currentDateTime = zoneDateTime.format(dateTimeFormat);
 
-			String courseNoteName = courseName + "_" + currentDateTime;
+			String courseNoteNameString = courseNameParameter + "_" + currentDateTime;
 			// System.out.println(courseNoteName);
-			courseNoteName = courseNoteName.replace(" ", "_");
-			courseNoteName = courseNoteName.replace(",", "");
-			courseNoteName = courseNoteName.replace(":", "_");
+			courseNoteNameString = courseNoteNameString.replace(" ", "_");
+			courseNoteNameString = courseNoteNameString.replace(",", "");
+			courseNoteNameString = courseNoteNameString.replace(":", "_");
+			courseNoteNameString += ".txt";
 			System.out.println("creating directory");
-			File directory = new File(courseName);
-			directory.
+			//File directory = new File(courseNameParameter);
+			//directory.
 			System.out.println("creating file");
-			File courseNotes = new File(courseName, courseNoteName + ".txt");
+			File courseNoteFile = new File(courseNameParameter, courseNoteNameString);
 
 			// Create Note File
-			if (courseNotes.exists()) {
+			if (courseNoteFile.exists()) {
 				System.out.println("Course note by this name already exits");
 				System.exit(-1);
 			} else {
 				try {
-					courseNotes.createNewFile();
+					courseNoteFile.createNewFile();
 				} catch (IOException e) {
 					System.out.println("IO Error Cannot create new course note");
 					System.exit(-1);
 				}
-				if (courseNotes.canWrite() && courseNotes.canRead()) {
+				if (courseNoteFile.canWrite() && courseNoteFile.canRead()) {
 
 					// Write Date header to course file
-					try (FileWriter fileWrite = new FileWriter(courseNotes, true)) {
-						fileWrite.write(courseNoteName);
+					try (FileWriter fileWrite = new FileWriter(courseNoteFile, true)) {
+						fileWrite.write(courseNoteNameString.replace(".txt", ""));
 					} catch (IOException ex) {
-						System.out.println("Cannot write to file " + courseNoteName);
+						System.out.println("Cannot write to file " + courseNoteNameString);
 						System.exit(-1);
 					}
 
 					// Open Notepad
-					ProcessBuilder notePadPb = new ProcessBuilder("notepad.exe", courseNoteName);
+					ProcessBuilder notePadPb = new ProcessBuilder("notepad.exe", courseNameParameter + "\\" + courseNoteNameString);
 					try {
 						Process notePadProcess = notePadPb.start();
 					} catch (IOException e) {
@@ -173,7 +174,7 @@ public class Controller {
 
 			return;
 		} else {
-			System.out.println("Course " + courseName + " not found, please add course");
+			System.out.println("Course " + courseNameParameter + " not found, please add course");
 			System.exit(-1);
 		}
 	}

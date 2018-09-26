@@ -8,8 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Scanner;
 //import java.io.InputStreamReader;
 
@@ -42,9 +48,9 @@ public class Controller {
 	}
 
 	public void addCourse(String course) {
-		System.out.println("In course creation area");
+		// System.out.println("In course creation area");
 
-		System.out.println("in dupe checker");
+		// System.out.println("in dupe checker");
 		String courseToMatch = "";
 		// Scanner dupeScanner;
 		try {
@@ -53,10 +59,12 @@ public class Controller {
 			while (dupeScanner.hasNextLine()) {
 				courseToMatch = dupeScanner.nextLine();
 				if (course.equals(courseToMatch)) {
-					System.out.println("Course already in file");
+					System.out.println("Course of same name already registered, course not added");
 					System.exit(-1);
 				}
 			}
+
+			dupeScanner.close();
 		} catch (FileNotFoundException e1) {
 			System.out.println("File " + fileName + " not found");
 			System.exit(-1);
@@ -67,7 +75,10 @@ public class Controller {
 		try (FileWriter fileWrite = new FileWriter(fileName, true)) {
 			courseNewLine = course + "\r\n"; // add newline
 			fileWrite.write(courseNewLine);
-			System.out.println("Course " + course + " Added to courses file");
+			System.out.println("Course " + course + " added to courses file");
+			System.out.println("Course " + course + " directory created");
+			File courseDir = new File(course);
+			courseDir.mkdir();
 		} catch (IOException e) {
 			System.out.println("IO Error, unable to add course, please check courses file");
 			System.exit(-1);
@@ -81,12 +92,14 @@ public class Controller {
 		return;
 	}
 
-	public void createNote(String courseName) {
+	public void newNote(String courseName) {
 
 		boolean exists = false;
+
 		// Check for course in courses.txt
 		try {
 			Scanner dupeScanner = new Scanner(myFile);
+
 			while (dupeScanner.hasNextLine()) {
 				String existingCourseName = dupeScanner.nextLine();
 				if (courseName.equals(existingCourseName)) {
@@ -94,6 +107,8 @@ public class Controller {
 					break;
 				}
 			}
+
+			dupeScanner.close();
 		} catch (FileNotFoundException e1) {
 			System.out.println("File " + fileName + " not found");
 			System.exit(-1);
@@ -101,24 +116,30 @@ public class Controller {
 
 		if (exists) {
 			// Set Course Note name
-			Calendar date = Calendar.getInstance();
-			//use getDisplayName() here
-			String courseNoteName = courseName + "_"+ date.getDisplayName(Calendar.DAY_OF_MONTH, Calendar.SHORT_FORMAT, Calendar.) + 
-					"_" + date.get(Calendar.MONTH) + "_" + date.get(Calendar.HOUR) + 
-					date.get(Calendar.MINUTE) + date.get);
-			//courseNoteName = courseNoteName.replace(" ", "");
-			//URI courseNoteURI = null;
+			Instant timeInstant = Instant.now();
+			Locale locale = new Locale("eng", "CA");
+			ZoneId timeZoneId = ZoneId.of("America/Toronto");
+			ZonedDateTime zoneDateTime = timeInstant.atZone(timeZoneId);
+			DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)
+					.withLocale(locale);
+			String currentDateTime = zoneDateTime.format(dateTimeFormat);
 
-//			try {
-//				courseNoteURI = new URI("file:///" + courseNoteName);
-//			} catch (URISyntaxException e1) {
-//				System.out.println("URI syntax error");
-//				System.exit(-1);
-//			}
-			File courseNotes = new File(courseNoteName + ".txt");
+			String courseNoteName = courseName + "_" + currentDateTime;
+			// System.out.println(courseNoteName);
+			courseNoteName = courseNoteName.replace(" ", "_");
+			courseNoteName = courseNoteName.replace(",", "");
+			courseNoteName = courseNoteName.replace(":", "_");
+			System.out.println("creating directory");
+			File directory = new File(courseName);
+			directory.
+			System.out.println("creating file");
+			File courseNotes = new File(courseName, courseNoteName + ".txt");
 
 			// Create Note File
-			if (!courseNotes.exists()) {
+			if (courseNotes.exists()) {
+				System.out.println("Course note by this name already exits");
+				System.exit(-1);
+			} else {
 				try {
 					courseNotes.createNewFile();
 				} catch (IOException e) {
@@ -134,13 +155,20 @@ public class Controller {
 						System.out.println("Cannot write to file " + courseNoteName);
 						System.exit(-1);
 					}
+
+					// Open Notepad
+					ProcessBuilder notePadPb = new ProcessBuilder("notepad.exe", courseNoteName);
+					try {
+						Process notePadProcess = notePadPb.start();
+					} catch (IOException e) {
+						System.out.println("Cannot open notepad for editing, please open using another editor");
+						System.exit(-1);
+					}
 				} else {
 					System.out.println("Cannot read or write to file, please check permissions");
 					System.exit(-1);
 				}
-			} else {
-				System.out.println("Course note by this name already exits");
-				System.exit(-1);
+
 			}
 
 			return;

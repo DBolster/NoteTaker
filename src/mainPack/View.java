@@ -40,7 +40,7 @@ public class View {
 					break;
 				} else {
 					System.out.println("Generating new note");
-					mainControl.createNote(args[1]);
+					mainControl.newNote(args[1]);
 					break;
 				}
 			case "-h":

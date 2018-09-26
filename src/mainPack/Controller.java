@@ -183,10 +183,10 @@ public class Controller {
 		System.out.println("Program use:  NoteTaker -ac/lc/nn/h optional: <Course Name> ");
 		System.out.println("-ac <Course Name>  Add course, adds a course to the course list");
 		System.out.println("Example: NoteTaker -ac COMP450");
-		System.out.println("-lc        		   List the courses in the course list, no additional parameters");
+		System.out.println("-lc  List the courses in the course list, no additional parameters");
 		System.out.println("-nn <Course Name>  New note, creates a new text file datestamped with the course name");
 		System.out.println("Example: NoteTaker -nn COMP43");
-		System.out.println("-h                 Displays this help page");
+		System.out.println("-h  Displays this help page");
 		System.out.println("End of help page");
 
 		return;

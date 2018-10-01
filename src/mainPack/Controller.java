@@ -3,21 +3,15 @@ package mainPack;
 //import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Scanner;
-//import java.io.InputStreamReader;
 
 public class Controller {
 
@@ -25,14 +19,7 @@ public class Controller {
 	File myFile = null;
 
 	public Controller() {
-		// URI courseListURI = null;
-		// URI courseListURI = null;
-		// try {
-		// courseListURI = new URI("file:///" + fileName);
-		// } catch (URISyntaxException e) {
-		// System.out.println("URI syntax error");
-		// }
-		// myFile = new File(courseListURI.toString());
+		//create .courses.txt file unless it already exists
 		myFile = new File(fileName);
 		if (!myFile.exists())
 			try {
@@ -48,11 +35,8 @@ public class Controller {
 	}
 
 	public void addCourse(String course) {
-		// System.out.println("In course creation area");
-
-		// System.out.println("in dupe checker");
+		//check for duplicate courses
 		String courseToMatch = "";
-		// Scanner dupeScanner;
 		try {
 			Scanner dupeScanner = new Scanner(myFile);
 
@@ -69,8 +53,8 @@ public class Controller {
 			System.out.println("File " + fileName + " not found");
 			System.exit(-1);
 		}
-		// String courseToCheck = course + "\r\n";
-
+		
+		//add course to .courses.txt file
 		String courseNewLine;
 		try (FileWriter fileWrite = new FileWriter(fileName, true)) {
 			courseNewLine = course + "\r\n"; // add newline
@@ -88,15 +72,27 @@ public class Controller {
 	}
 
 	public void listCourses() {
-		System.out.println("Course listing area");
-		return;
+		System.out.println("Courses listed in course file \".courses.txt\" ");
+		//List courses in .courses.txt file
+		try {
+			Scanner listScanner = new Scanner(myFile);
+
+			while (listScanner.hasNextLine()) {
+				String courseName = listScanner.nextLine();
+				System.out.println(courseName);
+			}
+			listScanner.close();
+		} catch (IOException ex) {
+			System.out.println("Cannot read .courses.txt file");
+			System.exit(-1);
+		}
+
 	}
 
 	public void newNote(String courseNameParameter) {
 
 		boolean exists = false;
-
-		// Check for course in courses.txt
+		//Scan file for existing notes
 		try {
 			Scanner dupeScanner = new Scanner(myFile);
 
@@ -125,14 +121,11 @@ public class Controller {
 			String currentDateTime = zoneDateTime.format(dateTimeFormat);
 
 			String courseNoteNameString = courseNameParameter + "_" + currentDateTime;
-			// System.out.println(courseNoteName);
 			courseNoteNameString = courseNoteNameString.replace(" ", "_");
 			courseNoteNameString = courseNoteNameString.replace(",", "");
 			courseNoteNameString = courseNoteNameString.replace(":", "_");
 			courseNoteNameString += ".txt";
 			System.out.println("creating directory");
-			//File directory = new File(courseNameParameter);
-			//directory.
 			System.out.println("creating file");
 			File courseNoteFile = new File(courseNameParameter, courseNoteNameString);
 
@@ -158,8 +151,10 @@ public class Controller {
 					}
 
 					// Open Notepad
-					ProcessBuilder notePadPb = new ProcessBuilder("notepad.exe", courseNameParameter + "\\" + courseNoteNameString);
+					ProcessBuilder notePadPb = new ProcessBuilder("C:\\Program Files\\Notepad++\\Notepad++.exe",
+							courseNameParameter + "\\" + courseNoteNameString);
 					try {
+						@SuppressWarnings("unused")
 						Process notePadProcess = notePadPb.start();
 					} catch (IOException e) {
 						System.out.println("Cannot open notepad for editing, please open using another editor");
@@ -180,6 +175,7 @@ public class Controller {
 	}
 
 	public void showHelp() {
+		//Display help options
 		System.out.println("Program use:  NoteTaker -ac/lc/nn/h optional: <Course Name> ");
 		System.out.println("-ac <Course Name>  Add course, adds a course to the course list");
 		System.out.println("Example: NoteTaker -ac COMP450");

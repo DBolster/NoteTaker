@@ -19,7 +19,7 @@ public class Controller {
 	File myFile = null;
 
 	public Controller() {
-		//create .courses.txt file unless it already exists
+		// create .courses.txt file unless it already exists
 		myFile = new File(fileName);
 		if (!myFile.exists())
 			try {
@@ -35,7 +35,7 @@ public class Controller {
 	}
 
 	public void addCourse(String course) {
-		//check for duplicate courses
+		// check for duplicate courses
 		String courseToMatch = "";
 		try {
 			Scanner dupeScanner = new Scanner(myFile);
@@ -53,8 +53,8 @@ public class Controller {
 			System.out.println("File " + fileName + " not found");
 			System.exit(-1);
 		}
-		
-		//add course to .courses.txt file
+
+		// add course to .courses.txt file
 		String courseNewLine;
 		try (FileWriter fileWrite = new FileWriter(fileName, true)) {
 			courseNewLine = course + "\r\n"; // add newline
@@ -73,7 +73,7 @@ public class Controller {
 
 	public void listCourses() {
 		System.out.println("Courses listed in course file \".courses.txt\" ");
-		//List courses in .courses.txt file
+		// List courses in .courses.txt file
 		try {
 			Scanner listScanner = new Scanner(myFile);
 
@@ -92,7 +92,7 @@ public class Controller {
 	public void newNote(String courseNameParameter) {
 
 		boolean exists = false;
-		//Scan file for existing notes
+		// Scan file for existing notes
 		try {
 			Scanner dupeScanner = new Scanner(myFile);
 
@@ -175,7 +175,7 @@ public class Controller {
 	}
 
 	public void showHelp() {
-		//Display help options
+		// Display help options
 		System.out.println("Program use:  NoteTaker -ac/lc/nn/h optional: <Course Name> ");
 		System.out.println("-ac <Course Name>  Add course, adds a course to the course list");
 		System.out.println("Example: NoteTaker -ac COMP450");
@@ -186,6 +186,37 @@ public class Controller {
 		System.out.println("End of help page");
 
 		return;
+	}
+
+	public void purgeCourseFile() {
+
+		String confirm;
+		@SuppressWarnings("resource")
+		Scanner confirmChoice = new Scanner(System.in);
+		System.out.println("***Warning, this will delete your .courses.txt index file***");
+		System.out.println("Press Y to continue or N to exit");
+		confirm = confirmChoice.next();
+		confirm.trim();
+		confirm = confirm.toUpperCase();
+		while ((!confirm.equals("Y")) && (!confirm.equals("N"))) {
+			System.out.println("Please enter Y or N:");
+			confirm = confirmChoice.next();
+			confirm.trim();
+			confirm = confirm.toUpperCase();			
+		}
+
+		switch (confirm) {
+		case "Y":
+			myFile.delete();
+			System.out.println(".courses.txt file deleted");
+			break;
+		case "N":
+			System.out.println("exiting with no changes made");
+			confirmChoice.close();
+			System.exit(-1);
+		}
+
+		confirmChoice.close();
 	}
 
 }

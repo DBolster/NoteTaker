@@ -31,9 +31,22 @@ public class View {
 					break;
 				}
 			case "-lc":
-				System.out.println("Listing courses");
-				mainControl.listCourses();
-				break;
+				if (args.length > 1) {
+					System.out.println("Too many arguments, type -h for help");
+					break;
+				} else {
+					System.out.println("Listing courses");
+					mainControl.listCourses();
+					break;
+				}
+			case "-purge":
+				if (args.length > 1) {
+					System.out.println("Too many arguments, type -h for help");
+					break;
+				} else {
+					mainControl.purgeCourseFile();
+					break;
+				}
 			case "-nn":
 				if (args.length < 2) {
 					System.out.println("Missing course name, type NoteTaker -h for help");
@@ -44,8 +57,13 @@ public class View {
 					break;
 				}
 			case "-h":
-				System.out.println("Help Options");
-				mainControl.showHelp();
+				if (args.length > 1) {
+					System.out.println("Too many arguments, type -h for help");
+				} else {
+					System.out.println("Help Options");
+					mainControl.showHelp();
+					break;
+				}
 			default:
 				System.out.println("Invalid option");
 				break;

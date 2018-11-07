@@ -13,12 +13,12 @@ import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class Controller {
+public class CmdFunctions {
 
 	final String fileName = ".courses";
 	File myFile = null;
 
-	public Controller() {
+	public CmdFunctions() {
 		// create .courses.txt file unless it already exists
 		myFile = new File(fileName);
 		if (!myFile.exists())

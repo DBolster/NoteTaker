@@ -1,8 +1,0 @@
-/**
- * 
- */
-/**
- * @author Douglas
- *
- */
-package mainPack;

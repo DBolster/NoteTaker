@@ -1,15 +1,15 @@
 package mainPack;
 
-public class View {
+public class CmdManager {
 
-	public View() {
+	public CmdManager() {
 		// empty constructor
 	}
 
 	public static void main(String[] args) {
 
 		// This is the main class that chooses what functions to call based on arguments
-		Controller mainControl = new Controller();
+		CmdFunctions mainControl = new CmdFunctions();
 		// args -nc
 		// lc
 		// nn

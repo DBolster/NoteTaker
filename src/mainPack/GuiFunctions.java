@@ -36,43 +36,47 @@ public class GuiFunctions extends CmdFunctions {
 			}
 	}
 
-	// TODO remove console code
 	@Override
 	public void addCourse(String course) {
-		// check for duplicate courses
-		String courseToMatch = "";
-		try {
-			Scanner dupeScanner = new Scanner(myFile);
 
-			while (dupeScanner.hasNextLine()) {
-				courseToMatch = dupeScanner.nextLine();
-				if (course.equals(courseToMatch)) {
-					System.out.println("Course of same name already registered, course not added");
-					System.exit(-1);
+		if (course == "") {
+			JOptionPane.showMessageDialog(null, "Please add a course name");
+		} else {
+			// check for duplicate courses
+			String courseToMatch = "";
+			try {
+				Scanner dupeScanner = new Scanner(myFile);
+
+				while (dupeScanner.hasNextLine()) {
+					courseToMatch = dupeScanner.nextLine();
+					if (course.equals(courseToMatch)) {
+						JOptionPane.showMessageDialog(null, "Course of same name already registered, course not added");
+						return;
+					}
 				}
+
+				dupeScanner.close();
+			} catch (FileNotFoundException e1) {
+				JOptionPane.showMessageDialog(null, "File " + fileName + " not found");
+				return;
 			}
 
-			dupeScanner.close();
-		} catch (FileNotFoundException e1) {
-			System.out.println("File " + fileName + " not found");
-			System.exit(-1);
-		}
+			// TODO remove console code
+			String courseNewLine;
+			try (FileWriter fileWrite = new FileWriter(fileName, true)) {
+				courseNewLine = course + "\r\n"; // add newline
+				fileWrite.write(courseNewLine);
+				JOptionPane.showMessageDialog(null, "Course " + course + " added to courses file");
+				JOptionPane.showMessageDialog(null, "Course " + course + " directory created");
+				File courseDir = new File(course);
+				courseDir.mkdir();
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, "IO Error, unable to add course, please check courses file");
+				return;
+			}
 
-		// TODO remove console code
-		String courseNewLine;
-		try (FileWriter fileWrite = new FileWriter(fileName, true)) {
-			courseNewLine = course + "\r\n"; // add newline
-			fileWrite.write(courseNewLine);
-			System.out.println("Course " + course + " added to courses file");
-			System.out.println("Course " + course + " directory created");
-			File courseDir = new File(course);
-			courseDir.mkdir();
-		} catch (IOException e) {
-			System.out.println("IO Error, unable to add course, please check courses file");
-			System.exit(-1);
+			return;
 		}
-
-		return;
 	}
 
 	public List createCourseList() {

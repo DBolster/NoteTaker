@@ -18,7 +18,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 import mainPack.GuiFunctions;
 
@@ -32,13 +34,14 @@ public class MainFrame extends JFrame {
 	private JButton btnAddCourse;
 	private JButton btnPurgeCourses;
 	private JButton btnHelp;
-	private JPanel jp_InfoContainer;
+	private JPanel jp_InfoCards;
 	private JPanel jp_CourseList;
 	private JList<String> jL_courseList;
 	private JPanel jp_HelpPanel;
 	private JPanel jp_Top;
 	private JPanel jp_Bottom;
 	private JPanel jp_Right;
+	public GuiFunctions guiControl = new GuiFunctions();
 
 	private static final long serialVersionUID = 1L;
 
@@ -60,6 +63,10 @@ public class MainFrame extends JFrame {
 	}
 
 	private JPanel contentPane;
+	private JPanel jp_AddCourse;
+	private JTextField j_txtFieldNewCourse;
+	private JTextField j_txtFieldCourseMessage;
+	private JButton btnAddToList;
 
 	/**
 	 * Create the frame.
@@ -101,6 +108,12 @@ public class MainFrame extends JFrame {
 		jp_ButtonContainer.add(btnListCourses, gbc_btnListCourses);
 
 		btnAddCourse = new JButton("Add Course");
+		btnAddCourse.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				do_btnAddCourse_actionPerformed(arg0);
+			}
+		});
 		btnAddCourse.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		GridBagConstraints gbc_btnAddCourse = new GridBagConstraints();
 		gbc_btnAddCourse.fill = GridBagConstraints.HORIZONTAL;
@@ -127,21 +140,46 @@ public class MainFrame extends JFrame {
 		gbc_btnHelp.gridy = 3;
 		jp_ButtonContainer.add(btnHelp, gbc_btnHelp);
 
-		jp_InfoContainer = new JPanel();
-		jp_InfoContainer.setBackground(Color.PINK);
-		contentPane.add(jp_InfoContainer, BorderLayout.CENTER);
-		jp_InfoContainer.setLayout(new CardLayout(0, 0));
+		jp_InfoCards = new JPanel();
+		jp_InfoCards.setBackground(Color.PINK);
+		contentPane.add(jp_InfoCards, BorderLayout.CENTER);
+		jp_InfoCards.setLayout(new CardLayout(0, 0));
 
 		jp_CourseList = new JPanel();
 		jp_CourseList.setBackground(Color.GRAY);
-		jp_InfoContainer.add(jp_CourseList, "name_628967745091948");
+		jp_InfoCards.add(jp_CourseList, "jp_CourseList");
 
 		jL_courseList = new JList<String>();
+		jL_courseList.setBorder(new LineBorder(new Color(0, 0, 0)));
 		jp_CourseList.add(jL_courseList);
 
 		jp_HelpPanel = new JPanel();
 		jp_HelpPanel.setBackground(Color.RED);
-		jp_InfoContainer.add(jp_HelpPanel, "name_628972159546938");
+		jp_InfoCards.add(jp_HelpPanel, "jp_HelpPanel");
+
+		jp_AddCourse = new JPanel();
+		jp_AddCourse.setBackground(Color.PINK);
+		jp_InfoCards.add(jp_AddCourse, "jp_AddCourse");
+
+		j_txtFieldNewCourse = new JTextField();
+		jp_AddCourse.add(j_txtFieldNewCourse);
+		j_txtFieldNewCourse.setColumns(10);
+
+		j_txtFieldCourseMessage = new JTextField();
+		j_txtFieldCourseMessage.setEnabled(false);
+		j_txtFieldCourseMessage.setEditable(false);
+		j_txtFieldCourseMessage.setVisible(false);
+		jp_AddCourse.add(j_txtFieldCourseMessage);
+		j_txtFieldCourseMessage.setColumns(10);
+
+		btnAddToList = new JButton("Add to List");
+		btnAddToList.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				do_btnAddToList_actionPerformed(arg0);
+			}
+		});
+		jp_AddCourse.add(btnAddToList);
 
 		jp_Top = new JPanel();
 		FlowLayout flowLayout = (FlowLayout) jp_Top.getLayout();
@@ -163,13 +201,29 @@ public class MainFrame extends JFrame {
 	}
 
 	protected void btnTaskActionPerformed(ActionEvent arg0) {
-		GuiFunctions guiControl = new GuiFunctions();
+		CardLayout cl = (CardLayout) (jp_InfoCards.getLayout());
+		cl.show(jp_InfoCards, "jp_CourseList");
 		List courseList = guiControl.createCourseList();
-		DefaultListModel<String> listM = new DefaultListModel<String>();
+		DefaultListModel<String> listM = new DefaultListModel<>();
 		for (int i = 0; i < courseList.getItemCount(); i++) {
 			listM.addElement(courseList.getItem(i));
 		}
 		jL_courseList.setModel(listM);
 	}
 
+	protected void do_btnAddCourse_actionPerformed(ActionEvent arg0) {
+		CardLayout cl = (CardLayout) (jp_InfoCards.getLayout());
+		cl.show(jp_InfoCards, "jp_AddCourse");
+		if (j_txtFieldCourseMessage.isVisible()) {
+			j_txtFieldCourseMessage.setVisible(false);
+		}
+
+	}
+
+	protected void do_btnAddToList_actionPerformed(ActionEvent arg0) {
+		String newCourse = j_txtFieldNewCourse.getText().trim();
+		guiControl.addCourse(newCourse);
+		j_txtFieldCourseMessage.setText("Course Added to List");
+		j_txtFieldCourseMessage.setVisible(true);
+	}
 }

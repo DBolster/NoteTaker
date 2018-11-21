@@ -12,11 +12,15 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Scanner;
+
 import javax.swing.JOptionPane;
 
-public class GuiFunctions extends CmdFunctions  {
+public class GuiFunctions extends CmdFunctions {
 
-	//UPDATED
+	final String fileName = ".courses";
+	File myFile = null;
+
+	// UPDATED
 	public GuiFunctions() {
 		// create .courses.txt file unless it already exists
 		myFile = new File(fileName);
@@ -31,7 +35,9 @@ public class GuiFunctions extends CmdFunctions  {
 				System.exit(-1);
 			}
 	}
-	//TODO remove console code
+
+	// TODO remove console code
+	@Override
 	public void addCourse(String course) {
 		// check for duplicate courses
 		String courseToMatch = "";
@@ -52,7 +58,7 @@ public class GuiFunctions extends CmdFunctions  {
 			System.exit(-1);
 		}
 
-		//TODO remove console code
+		// TODO remove console code
 		String courseNewLine;
 		try (FileWriter fileWrite = new FileWriter(fileName, true)) {
 			courseNewLine = course + "\r\n"; // add newline
@@ -80,12 +86,13 @@ public class GuiFunctions extends CmdFunctions  {
 			}
 			listScanner.close();
 		} catch (IOException ex) {
-			JOptionPane.showMessageDialog(null,"Cannot read .courses.txt file");			
+			JOptionPane.showMessageDialog(null, "Cannot read .courses.txt file");
 		}
 		return courseList;
 	}
 
-	//TODO remove console code
+	// TODO remove console code
+	@Override
 	public void newNote(String courseNameParameter) {
 
 		boolean exists = false;
@@ -171,7 +178,8 @@ public class GuiFunctions extends CmdFunctions  {
 		}
 	}
 
-	//TODO remove console code - change to list? maybe for GUI
+	// TODO remove console code - change to list? maybe for GUI
+	@Override
 	public void showHelp() {
 		// Display help options
 		System.out.println("Program use:  NoteTaker -ac/lc/nn/h optional: <Course Name> ");
@@ -186,7 +194,8 @@ public class GuiFunctions extends CmdFunctions  {
 		return;
 	}
 
-	//TODO remove console code
+	// TODO remove console code
+	@Override
 	public void purgeCourseFile() {
 
 		String confirm;
@@ -201,7 +210,7 @@ public class GuiFunctions extends CmdFunctions  {
 			System.out.println("Please enter Y or N:");
 			confirm = confirmChoice.next();
 			confirm.trim();
-			confirm = confirm.toUpperCase();			
+			confirm = confirm.toUpperCase();
 		}
 
 		switch (confirm) {
@@ -217,7 +226,5 @@ public class GuiFunctions extends CmdFunctions  {
 
 		confirmChoice.close();
 	}
-
-	
 
 }

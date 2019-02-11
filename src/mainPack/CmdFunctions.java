@@ -13,12 +13,18 @@ import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class CmdFunctions {
+public class CmdFunctions implements courseFunctions {
 
-	final String fileName = ".courses";
-	File myFile = null;
+	private String fileName = "";
+	private File myFile = null;
 
-	public CmdFunctions() {
+	public CmdFunctions(String fileNameInput) {
+		fileName = fileNameInput;
+		this.myFile = new File(fileName);
+	}
+
+	@Override
+	public int createCourseList() {
 		// create .courses.txt file unless it already exists
 		myFile = new File(fileName);
 		if (!myFile.exists())
@@ -26,34 +32,35 @@ public class CmdFunctions {
 				myFile.createNewFile();
 				if (!myFile.canWrite() && !myFile.canRead()) {
 					System.out.println("Cannot read or write to file, please check permissions");
-					System.exit(-1);
+					return 1;
 				}
 			} catch (IOException e1) {
 				System.out.println("Cannot create courses file");
-				System.exit(-1);
+				return 1;
 			}
+		return 1;
 	}
 
-	public void addCourse(String course) {
-		// check for duplicate courses
+	@Override
+	public boolean findCourse(String course) {
 		String courseToMatch = "";
-		try {
-			Scanner dupeScanner = new Scanner(myFile);
-
+		try (Scanner dupeScanner = new Scanner(myFile)) {
 			while (dupeScanner.hasNextLine()) {
 				courseToMatch = dupeScanner.nextLine();
 				if (course.equals(courseToMatch)) {
-					System.out.println("Course of same name already registered, course not added");
-					System.exit(-1);
+					// System.out.println("Course found");
+					return true;
 				}
 			}
-
-			dupeScanner.close();
 		} catch (FileNotFoundException e1) {
 			System.out.println("File " + fileName + " not found");
-			System.exit(-1);
+			return false;
 		}
+		return false;
+	}
 
+	@Override
+	public int addCourse(String course) {
 		// add course to .courses.txt file
 		String courseNewLine;
 		try (FileWriter fileWrite = new FileWriter(fileName, true)) {
@@ -65,52 +72,34 @@ public class CmdFunctions {
 			courseDir.mkdir();
 		} catch (IOException e) {
 			System.out.println("IO Error, unable to add course, please check courses file");
-			System.exit(-1);
+			return 1;
 		}
-
-		return;
+		return 0;
 	}
 
-	public void listCourses() {
-		System.out.println("Courses listed in course file \".courses.txt\" ");
+	@Override
+	public String listCourses() {
+		// System.out.println("Courses listed in course file \".courses.txt\" ");
 		// List courses in .courses.txt file
-		try {
-			Scanner listScanner = new Scanner(myFile);
+
+		StringBuilder sb = new StringBuilder();
+		try (Scanner listScanner = new Scanner(myFile);) {
 
 			while (listScanner.hasNextLine()) {
-				String courseName = listScanner.nextLine();
-				System.out.println(courseName);
+				sb.append(listScanner.nextLine() + "/n");
 			}
-			listScanner.close();
 		} catch (IOException ex) {
-			System.out.println("Cannot read .courses.txt file");
-			System.exit(-1);
+			System.out.println("Cannot read " + fileName + " file");
+			return "";
+			// System.exit(-1);
 		}
-
+		String courseList = sb.toString();
+		return courseList;
 	}
 
-	public void newNote(String courseNameParameter) {
-
-		boolean exists = false;
-		// Scan file for existing notes
-		try {
-			Scanner dupeScanner = new Scanner(myFile);
-
-			while (dupeScanner.hasNextLine()) {
-				String existingCourseName = dupeScanner.nextLine();
-				if (courseNameParameter.equals(existingCourseName)) {
-					exists = true;
-					break;
-				}
-			}
-
-			dupeScanner.close();
-		} catch (FileNotFoundException e1) {
-			System.out.println("File " + fileName + " not found");
-			System.exit(-1);
-		}
-
-		if (exists) {
+	@Override
+	public int newNote(String courseNameParameter) {
+		if (!this.findCourse(courseNameParameter)) {
 			// Set Course Note name
 			Instant timeInstant = Instant.now();
 			Locale locale = new Locale("eng", "CA");
@@ -132,13 +121,13 @@ public class CmdFunctions {
 			// Create Note File
 			if (courseNoteFile.exists()) {
 				System.out.println("Course note by this name already exits");
-				System.exit(-1);
+				return 1;
 			} else {
 				try {
 					courseNoteFile.createNewFile();
 				} catch (IOException e) {
 					System.out.println("IO Error Cannot create new course note");
-					System.exit(-1);
+					return 1;
 				}
 				if (courseNoteFile.canWrite() && courseNoteFile.canRead()) {
 
@@ -147,10 +136,10 @@ public class CmdFunctions {
 						fileWrite.write(courseNoteNameString.replace(".txt", ""));
 					} catch (IOException ex) {
 						System.out.println("Cannot write to file " + courseNoteNameString);
-						System.exit(-1);
+						return 1;
 					}
 
-					// Open Notepad
+					// Open Notepad++, should change this to a param
 					ProcessBuilder notePadPb = new ProcessBuilder("C:\\Program Files\\Notepad++\\Notepad++.exe",
 							courseNameParameter + "\\" + courseNoteNameString);
 					try {
@@ -158,40 +147,42 @@ public class CmdFunctions {
 						Process notePadProcess = notePadPb.start();
 					} catch (IOException e) {
 						System.out.println("Cannot open notepad for editing, please open using another editor");
-						System.exit(-1);
+						return 1;
 					}
 				} else {
 					System.out.println("Cannot read or write to file, please check permissions");
-					System.exit(-1);
+					return 1;
 				}
 
 			}
 
-			return;
+			return 0;
 		} else {
 			System.out.println("Course " + courseNameParameter + " not found, please add course");
-			System.exit(-1);
+			return 1;
 		}
 	}
 
+	@Override
 	public void showHelp() {
 		// Display help options
-		System.out.println("Program use:  NoteTaker -ac/lc/nn/h optional: <Course Name> ");
-		System.out.println("-ac <Course Name>  Add course, adds a course to the course list");
-		System.out.println("Example: NoteTaker -ac COMP450");
-		System.out.println("-lc  List the courses in the course list, no additional parameters");
-		System.out.println("-nn <Course Name>  New note, creates a new text file datestamped with the course name");
-		System.out.println("Example: NoteTaker -nn COMP43");
-		System.out.println("-h  Displays this help page");
-		System.out.println("End of help page");
-
+		StringBuilder sb = new StringBuilder();
+		sb.append("Program use:  NoteTaker -ac/lc/nn/h optional: <Course Name>/n");
+		sb.append("-ac <Course Name>  Add course, adds a course to the course list/n");
+		sb.append("Example: NoteTaker -ac COMP450/n");
+		sb.append("-lc  List the courses in the course list, no additional parameters/n");
+		sb.append("-nn <Course Name>  New note, creates a new text file datestamped with the course name/n");
+		sb.append("Example: NoteTaker -nn COMP43/n");
+		sb.append("-h  Displays this help page/n");
+		sb.append("End of help page");
+		System.out.println(sb.toString());
 		return;
 	}
 
-	public void purgeCourseFile() {
+	@Override
+	public void purgeCourses() {
 
 		String confirm;
-		@SuppressWarnings("resource")
 		Scanner confirmChoice = new Scanner(System.in);
 		System.out.println("***Warning, this will delete your .courses.txt index file***");
 		System.out.println("Press Y to continue or N to exit");
@@ -202,7 +193,7 @@ public class CmdFunctions {
 			System.out.println("Please enter Y or N:");
 			confirm = confirmChoice.next();
 			confirm.trim();
-			confirm = confirm.toUpperCase();			
+			confirm = confirm.toUpperCase();
 		}
 
 		switch (confirm) {
@@ -213,10 +204,7 @@ public class CmdFunctions {
 		case "N":
 			System.out.println("exiting with no changes made");
 			confirmChoice.close();
-			System.exit(-1);
 		}
-
 		confirmChoice.close();
 	}
-
 }

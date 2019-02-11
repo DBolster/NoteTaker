@@ -1,6 +1,6 @@
 package mainPack;
 
-public interface courseFunctions {
+public interface I_NoteTaker {
 
 	public int createCourseList();
 

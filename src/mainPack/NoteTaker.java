@@ -13,12 +13,12 @@ import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class CmdFunctions implements courseFunctions {
+public class NoteTaker implements I_NoteTaker {
 
 	private String fileName = "";
 	private File myFile = null;
 
-	public CmdFunctions(String fileNameInput) {
+	public NoteTaker(String fileNameInput) {
 		fileName = fileNameInput;
 		this.myFile = new File(fileName);
 	}

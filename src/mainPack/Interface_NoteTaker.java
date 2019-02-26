@@ -1,6 +1,6 @@
 package mainPack;
 
-public interface I_NoteTaker {
+public interface Interface_NoteTaker {
 
 	public int createCourseList();
 

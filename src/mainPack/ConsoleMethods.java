@@ -13,12 +13,12 @@ import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class NoteTaker implements I_NoteTaker {
+public class ConsoleMethods implements Interface_NoteTaker {
 
 	private String fileName = "";
 	private File myFile = null;
 
-	public NoteTaker(String fileNameInput) {
+	public ConsoleMethods(String fileNameInput) {
 		fileName = fileNameInput;
 		this.myFile = new File(fileName);
 	}
@@ -86,7 +86,7 @@ public class NoteTaker implements I_NoteTaker {
 		try (Scanner listScanner = new Scanner(myFile);) {
 
 			while (listScanner.hasNextLine()) {
-				sb.append(listScanner.nextLine() + "/n");
+				sb.append(listScanner.nextLine() + "\n");
 			}
 		} catch (IOException ex) {
 			System.out.println("Cannot read " + fileName + " file");
@@ -99,7 +99,7 @@ public class NoteTaker implements I_NoteTaker {
 
 	@Override
 	public int newNote(String courseNameParameter) {
-		if (!this.findCourse(courseNameParameter)) {
+		if (this.findCourse(courseNameParameter)) {
 			// Set Course Note name
 			Instant timeInstant = Instant.now();
 			Locale locale = new Locale("eng", "CA");
@@ -140,7 +140,7 @@ public class NoteTaker implements I_NoteTaker {
 					}
 
 					// Open Notepad++, should change this to a param
-					ProcessBuilder notePadPb = new ProcessBuilder("C:\\Program Files\\Notepad++\\Notepad++.exe",
+					ProcessBuilder notePadPb = new ProcessBuilder("C:\\Program Files(x86)\\Notepad++\\Notepad++.exe",
 							courseNameParameter + "\\" + courseNoteNameString);
 					try {
 						@SuppressWarnings("unused")
@@ -163,6 +163,7 @@ public class NoteTaker implements I_NoteTaker {
 		}
 	}
 
+	// This function currently unused
 	@Override
 	public void showHelp() {
 		// Display help options

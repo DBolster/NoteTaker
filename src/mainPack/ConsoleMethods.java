@@ -13,6 +13,14 @@ import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Scanner;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
 public class ConsoleMethods implements Interface_NoteTaker {
 
 	private String fileName = "";
@@ -139,14 +147,16 @@ public class ConsoleMethods implements Interface_NoteTaker {
 						return 1;
 					}
 
-					// Open Notepad++, should change this to a param
-					ProcessBuilder notePadPb = new ProcessBuilder("C:\\Program Files(x86)\\Notepad++\\Notepad++.exe",
+					// Open Text Editor
+					System.out.println(setTextEditor());
+					ProcessBuilder notePadPb = new ProcessBuilder(setTextEditor(),
 							courseNameParameter + "\\" + courseNoteNameString);
 					try {
 						@SuppressWarnings("unused")
 						Process notePadProcess = notePadPb.start();
 					} catch (IOException e) {
-						System.out.println("Cannot open notepad for editing, please open using another editor");
+						System.out.println(
+								"Cannot open text editor for editing, please open note using another editor and check noteTaker.xml");
 						return 1;
 					}
 				} else {
@@ -164,21 +174,24 @@ public class ConsoleMethods implements Interface_NoteTaker {
 	}
 
 	// This function currently unused
-	@Override
-	public void showHelp() {
-		// Display help options
-		StringBuilder sb = new StringBuilder();
-		sb.append("Program use:  NoteTaker -ac/lc/nn/h optional: <Course Name>/n");
-		sb.append("-ac <Course Name>  Add course, adds a course to the course list/n");
-		sb.append("Example: NoteTaker -ac COMP450/n");
-		sb.append("-lc  List the courses in the course list, no additional parameters/n");
-		sb.append("-nn <Course Name>  New note, creates a new text file datestamped with the course name/n");
-		sb.append("Example: NoteTaker -nn COMP43/n");
-		sb.append("-h  Displays this help page/n");
-		sb.append("End of help page");
-		System.out.println(sb.toString());
-		return;
-	}
+	// @Override
+	// public void showHelp() {
+	// // Display help options
+	// StringBuilder sb = new StringBuilder();
+	// sb.append("Program use: NoteTaker -ac/lc/nn/h optional: <Course Name>/n");
+	// sb.append("-ac <Course Name> Add course, adds a course to the course
+	// list/n");
+	// sb.append("Example: NoteTaker -ac COMP450/n");
+	// sb.append("-lc List the courses in the course list, no additional
+	// parameters/n");
+	// sb.append("-nn <Course Name> New note, creates a new text file datestamped
+	// with the course name/n");
+	// sb.append("Example: NoteTaker -nn COMP43/n");
+	// sb.append("-h Displays this help page/n");
+	// sb.append("End of help page");
+	// System.out.println(sb.toString());
+	// return;
+	// }
 
 	@Override
 	public void purgeCourses() {
@@ -207,5 +220,36 @@ public class ConsoleMethods implements Interface_NoteTaker {
 			confirmChoice.close();
 		}
 		confirmChoice.close();
+	}
+
+	@Override
+	public String setTextEditor() {
+		// Get the path of the text editor to use from the xml file
+		String filePath = "noteTaker.xml";
+		String textEditorPath = "";
+		try {
+			File textEditorXML = new File(filePath);
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dbuilder;
+
+			dbuilder = dbFactory.newDocumentBuilder();
+			Document doc = dbuilder.parse(textEditorXML);
+			NodeList nodeList = doc.getElementsByTagName("Path");
+			textEditorPath = nodeList.item(0).getNodeValue();
+			textEditorPath = textEditorPath.replace("\\", "\\\\");
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return textEditorPath;
 	}
 }

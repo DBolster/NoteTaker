@@ -14,6 +14,8 @@ public interface Interface_NoteTaker {
 
 	public boolean findCourse(String course);
 
-	public void showHelp();
+	public String setTextEditor();
+
+	// public void showHelp();
 
 }

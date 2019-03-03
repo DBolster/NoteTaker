@@ -5,13 +5,14 @@ import java.util.Scanner;
 public class ConsoleMenu {
 
 	private StringBuilder sb;
-	private String choice, courseFileName;
+	private String choice;
 	private int numChoice;
 	private ConsoleMethods nt;
 	boolean validIO = false;
+	private static String courseFileName = ".courses";
 
 	public ConsoleMenu() {
-		courseFileName = ".courses";
+
 		nt = new ConsoleMethods(courseFileName);
 		sb = new StringBuilder();
 	}
@@ -24,7 +25,6 @@ public class ConsoleMenu {
 		sb.append("3.Add Course\n");
 		sb.append("4.Purge Course List\n\n");
 
-		// BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		Scanner inputScanner = new Scanner(System.in);
 
 		System.out.println(sb.toString());
@@ -32,16 +32,6 @@ public class ConsoleMenu {
 		choice = inputScanner.next();
 		choice = choice.toUpperCase();
 		choice.trim();
-
-		// while (!validIO) {
-		// try {
-		// choice = br.readLine();
-		// choice = choice.trim();
-		// validIO = true;
-		// } catch (IOException ex) {
-		// System.out.println("Input Error, please try again");
-		// }
-		// }
 
 		while (!choice.equals("Q") && !choice.equals("q")) {
 			try {

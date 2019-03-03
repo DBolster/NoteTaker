@@ -101,8 +101,15 @@ public class ConsoleMethods implements Interface_NoteTaker {
 			return "";
 			// System.exit(-1);
 		}
-		String courseList = sb.toString();
-		return courseList;
+		// DEBUG
+		// System.out.println(sb.length());
+		if (sb.length() == 0) {
+			return "";
+		} else {
+			String courseList = sb.toString();
+			return courseList;
+		}
+
 	}
 
 	@Override
@@ -235,6 +242,8 @@ public class ConsoleMethods implements Interface_NoteTaker {
 			dbuilder = dbFactory.newDocumentBuilder();
 			Document doc = dbuilder.parse(textEditorXML);
 			NodeList nodeList = doc.getElementsByTagName("Path");
+			// DEBUG
+			System.out.println(textEditorPath);
 			textEditorPath = nodeList.item(0).getNodeValue();
 			textEditorPath = textEditorPath.replace("\\", "\\\\");
 		} catch (ParserConfigurationException e) {

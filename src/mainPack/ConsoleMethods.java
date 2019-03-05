@@ -1,6 +1,5 @@
 package mainPack;
 
-//import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -32,8 +31,8 @@ public class ConsoleMethods implements Interface_NoteTaker {
 	}
 
 	@Override
-	public int createCourseList() {
-		// create .courses.txt file unless it already exists
+	public int createCourseFile() {
+		// create .courses file unless it already exists
 		myFile = new File(fileName);
 		if (!myFile.exists())
 			try {
@@ -46,7 +45,7 @@ public class ConsoleMethods implements Interface_NoteTaker {
 				System.out.println("Cannot create courses file");
 				return 1;
 			}
-		return 1;
+		return 0;
 	}
 
 	@Override
@@ -56,7 +55,6 @@ public class ConsoleMethods implements Interface_NoteTaker {
 			while (dupeScanner.hasNextLine()) {
 				courseToMatch = dupeScanner.nextLine();
 				if (course.equals(courseToMatch)) {
-					// System.out.println("Course found");
 					return true;
 				}
 			}
@@ -89,27 +87,22 @@ public class ConsoleMethods implements Interface_NoteTaker {
 	public String listCourses() {
 		// System.out.println("Courses listed in course file \".courses.txt\" ");
 		// List courses in .courses.txt file
-
+		String courseList;
 		StringBuilder sb = new StringBuilder();
 		try (Scanner listScanner = new Scanner(myFile);) {
-
 			while (listScanner.hasNextLine()) {
 				sb.append(listScanner.nextLine() + "\n");
 			}
+			if (sb.length() == 0) {
+				courseList = "";
+			} else {
+				courseList = sb.toString();
+			}
 		} catch (IOException ex) {
 			System.out.println("Cannot read " + fileName + " file");
-			return "";
-			// System.exit(-1);
+			courseList = "";
 		}
-		// DEBUG
-		// System.out.println(sb.length());
-		if (sb.length() == 0) {
-			return "";
-		} else {
-			String courseList = sb.toString();
-			return courseList;
-		}
-
+		return courseList;
 	}
 
 	@Override
@@ -145,7 +138,6 @@ public class ConsoleMethods implements Interface_NoteTaker {
 					return 1;
 				}
 				if (courseNoteFile.canWrite() && courseNoteFile.canRead()) {
-
 					// Write Date header to course file
 					try (FileWriter fileWrite = new FileWriter(courseNoteFile, true)) {
 						fileWrite.write(courseNoteNameString.replace(".txt", ""));
@@ -170,9 +162,7 @@ public class ConsoleMethods implements Interface_NoteTaker {
 					System.out.println("Cannot read or write to file, please check permissions");
 					return 1;
 				}
-
 			}
-
 			return 0;
 		} else {
 			System.out.println("Course " + courseNameParameter + " not found, please add course");
@@ -238,21 +228,20 @@ public class ConsoleMethods implements Interface_NoteTaker {
 			File textEditorXML = new File(filePath);
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dbuilder;
-
 			dbuilder = dbFactory.newDocumentBuilder();
 			Document doc = dbuilder.parse(textEditorXML);
 			NodeList nodeList = doc.getElementsByTagName("Path");
-			// DEBUG
-			System.out.println(textEditorPath);
 			textEditorPath = nodeList.item(0).getNodeValue();
 			textEditorPath = textEditorPath.replace("\\", "\\\\");
+			// DEBUG
+			System.out.println(textEditorPath);
+			//
 		} catch (ParserConfigurationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SAXException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-
 		} catch (FileNotFoundException ex) {
 			ex.printStackTrace();
 		} catch (IOException e) {

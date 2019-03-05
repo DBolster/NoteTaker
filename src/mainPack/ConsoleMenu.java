@@ -5,10 +5,7 @@ import java.util.Scanner;
 public class ConsoleMenu {
 
 	private StringBuilder sb;
-	private String choice;
-	private int numChoice;
 	private ConsoleMethods nt;
-	boolean validIO = false;
 	private static String courseFileName = ".courses";
 
 	public ConsoleMenu() {
@@ -17,16 +14,18 @@ public class ConsoleMenu {
 		sb = new StringBuilder();
 	}
 
-	public void showMainMenu() {
+	public void printMainMenu() {
+
+		int numChoice;
+		String choice, courseList;
+		Scanner inputScanner = new Scanner(System.in);
+
 		sb.append("NoteTaker Main Menu\n\n");
 		sb.append("Please choose an option from 1 to 4, Q to quit\n\n");
 		sb.append("1.New Note\n");
 		sb.append("2.List Courses\n");
 		sb.append("3.Add Course\n");
 		sb.append("4.Purge Course List\n\n");
-		String courseList;
-
-		Scanner inputScanner = new Scanner(System.in);
 
 		System.out.println(sb.toString());
 
@@ -45,7 +44,6 @@ public class ConsoleMenu {
 				} else {
 					switch (numChoice) {
 					case 1:
-
 						if (courseList.equals("")) {
 							System.out.println("Course List is Empty, please add a course");
 						} else {
@@ -82,5 +80,5 @@ public class ConsoleMenu {
 		} // while
 		inputScanner.close();
 		System.out.println("Exiting Program");
-	} // showMainMenu method
+	} // method
 } // class

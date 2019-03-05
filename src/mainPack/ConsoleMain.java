@@ -6,7 +6,7 @@ public class ConsoleMain {
 
 		ConsoleMenu myMenu = new ConsoleMenu();
 
-		myMenu.showMainMenu();
+		myMenu.printMainMenu();
 
 	}
 

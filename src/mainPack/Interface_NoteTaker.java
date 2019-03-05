@@ -2,7 +2,7 @@ package mainPack;
 
 public interface Interface_NoteTaker {
 
-	public int createCourseList();
+	public int createCourseFile();
 
 	public int newNote(String course);
 

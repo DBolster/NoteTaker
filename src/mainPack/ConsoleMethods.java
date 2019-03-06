@@ -237,16 +237,17 @@ public class ConsoleMethods implements Interface_NoteTaker {
 			System.out.println(textEditorPath);
 			//
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Parser config error");
+			// e.printStackTrace();
 		} catch (SAXException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("SAX exception");
+			// e.printStackTrace();
 		} catch (FileNotFoundException ex) {
-			ex.printStackTrace();
+			System.out.println("File not found exception in setTextEditor function");
+			// ex.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("IO exception in setTextEditor");
+			// e.printStackTrace();
 		}
 		return textEditorPath;
 	}

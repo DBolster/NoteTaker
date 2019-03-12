@@ -1,0 +1,3 @@
+COMP340_2019_Mar_12_12_32_18
+
+Hi This is a test of the NoteTaker Program!

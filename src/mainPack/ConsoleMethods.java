@@ -17,6 +17,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -27,7 +29,8 @@ public class ConsoleMethods implements Interface_NoteTaker {
 
 	public ConsoleMethods(String fileNameInput) {
 		fileName = fileNameInput;
-		this.myFile = new File(fileName);
+		// this.myFile = new File(fileName);
+		createCourseFile();
 	}
 
 	@Override
@@ -147,8 +150,9 @@ public class ConsoleMethods implements Interface_NoteTaker {
 					}
 
 					// Open Text Editor
-					System.out.println(setTextEditor());
-					ProcessBuilder notePadPb = new ProcessBuilder(setTextEditor(),
+					// System.out.println(setTextEditor());
+					String processPath = setTextEditor();
+					ProcessBuilder notePadPb = new ProcessBuilder(processPath,
 							courseNameParameter + "\\" + courseNoteNameString);
 					try {
 						@SuppressWarnings("unused")
@@ -215,6 +219,7 @@ public class ConsoleMethods implements Interface_NoteTaker {
 		case "N":
 			System.out.println("exiting with no changes made");
 			confirmChoice.close();
+			break;
 		}
 		confirmChoice.close();
 	}
@@ -230,11 +235,14 @@ public class ConsoleMethods implements Interface_NoteTaker {
 			DocumentBuilder dbuilder;
 			dbuilder = dbFactory.newDocumentBuilder();
 			Document doc = dbuilder.parse(textEditorXML);
-			NodeList nodeList = doc.getElementsByTagName("Path");
-			textEditorPath = nodeList.item(0).getNodeValue();
+			NodeList nodeList = doc.getElementsByTagName("TextEditor");
+			Node node = nodeList.item(0);
+			Element element = (Element) node;
+			textEditorPath = element.getElementsByTagName("Path").item(0).getTextContent();
+			// textEditorPath = nodeList.item(1).getNodeValue();
 			textEditorPath = textEditorPath.replace("\\", "\\\\");
 			// DEBUG
-			System.out.println(textEditorPath);
+			// System.out.println(textEditorPath);
 			//
 		} catch (ParserConfigurationException e) {
 			System.out.println("Parser config error");

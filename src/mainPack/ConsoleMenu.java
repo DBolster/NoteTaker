@@ -31,12 +31,12 @@ public class ConsoleMenu {
 
 		choice = inputScanner.next();
 		choice = choice.toUpperCase();
-		choice.trim();
+		choice = choice.trim();
 
 		while (!choice.equals("Q") && !choice.equals("q")) {
 			courseList = nt.listCourses();
 			// DEBUG
-			System.out.println(courseList);
+			// System.out.println(courseList);
 			try {
 				numChoice = Integer.parseInt(choice);
 				if (numChoice < 1 || numChoice > 4) {
@@ -58,6 +58,7 @@ public class ConsoleMenu {
 						if (courseList.equals("")) {
 							System.out.println("Course List Empty");
 						} else {
+							System.out.println("Your course list:");
 							System.out.println(courseList);
 						}
 						break;
@@ -76,6 +77,9 @@ public class ConsoleMenu {
 			} finally {
 				System.out.println(sb.toString());
 				choice = inputScanner.next();
+				choice = choice.toUpperCase();
+				choice = choice.trim();
+
 			} // finally
 		} // while
 		inputScanner.close();

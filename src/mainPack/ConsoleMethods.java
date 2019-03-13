@@ -174,54 +174,11 @@ public class ConsoleMethods implements Interface_NoteTaker {
 		}
 	}
 
-	// This function currently unused
-	// @Override
-	// public void showHelp() {
-	// // Display help options
-	// StringBuilder sb = new StringBuilder();
-	// sb.append("Program use: NoteTaker -ac/lc/nn/h optional: <Course Name>/n");
-	// sb.append("-ac <Course Name> Add course, adds a course to the course
-	// list/n");
-	// sb.append("Example: NoteTaker -ac COMP450/n");
-	// sb.append("-lc List the courses in the course list, no additional
-	// parameters/n");
-	// sb.append("-nn <Course Name> New note, creates a new text file datestamped
-	// with the course name/n");
-	// sb.append("Example: NoteTaker -nn COMP43/n");
-	// sb.append("-h Displays this help page/n");
-	// sb.append("End of help page");
-	// System.out.println(sb.toString());
-	// return;
-	// }
-
 	@Override
-	public void purgeCourses() {
+	public boolean purgeCourses() {
 
-		String confirm;
-		Scanner confirmChoice = new Scanner(System.in);
-		System.out.println("***Warning, this will delete your .courses.txt index file***");
-		System.out.println("Press Y to continue or N to exit");
-		confirm = confirmChoice.next();
-		confirm.trim();
-		confirm = confirm.toUpperCase();
-		while ((!confirm.equals("Y")) && (!confirm.equals("N"))) {
-			System.out.println("Please enter Y or N:");
-			confirm = confirmChoice.next();
-			confirm.trim();
-			confirm = confirm.toUpperCase();
-		}
+		return myFile.delete();
 
-		switch (confirm) {
-		case "Y":
-			myFile.delete();
-			System.out.println(".courses.txt file deleted");
-			break;
-		case "N":
-			System.out.println("exiting with no changes made");
-			confirmChoice.close();
-			break;
-		}
-		confirmChoice.close();
 	}
 
 	@Override

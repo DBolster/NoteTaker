@@ -68,7 +68,35 @@ public class ConsoleMenu {
 						nt.addCourse(choice);
 						break;
 					case 4:
-						nt.purgeCourses();
+
+						// String confirm;
+						// Scanner confirmChoice = new Scanner(System.in);
+						System.out.println("***Warning, this will delete your .courses.txt index file***");
+						System.out.println("Press Y to continue or N to exit");
+						choice = inputScanner.next();
+						choice.trim();
+						choice = choice.toUpperCase();
+						while ((!choice.equals("Y")) && (!choice.equals("N"))) {
+							System.out.println("Please enter Y or N:");
+							choice = inputScanner.next();
+							choice = choice.trim();
+							choice = choice.toUpperCase();
+						}
+
+						switch (choice) {
+						case "Y":
+							boolean deleted = false;
+							deleted = nt.purgeCourses();
+							// myFile.delete();
+							System.out.println(".courses.txt file deleted");
+							break;
+						case "N":
+							System.out.println("exiting with no changes made");
+							// confirmChoice.close();
+							break;
+						}
+						// confirmChoice.close();
+						// nt.purgeCourses();
 						break;
 					}
 				}
@@ -76,6 +104,7 @@ public class ConsoleMenu {
 				System.out.println("The input must be a number from 1 to 4, please try again");
 			} finally {
 				System.out.println(sb.toString());
+				// inputScanner.
 				choice = inputScanner.next();
 				choice = choice.toUpperCase();
 				choice = choice.trim();

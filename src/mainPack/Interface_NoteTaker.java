@@ -10,7 +10,7 @@ public interface Interface_NoteTaker {
 
 	public int addCourse(String course);
 
-	public void purgeCourses();
+	public boolean purgeCourses();
 
 	public boolean findCourse(String course);
 

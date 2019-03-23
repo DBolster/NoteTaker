@@ -71,6 +71,7 @@ public class ConsoleMethods implements Interface_NoteTaker {
 	@Override
 	public int addCourse(String course) {
 		// add course to .courses.txt file
+		createCourseFile();
 		String courseNewLine;
 		try (FileWriter fileWrite = new FileWriter(fileName, true)) {
 			courseNewLine = course + "\r\n"; // add newline
@@ -90,6 +91,7 @@ public class ConsoleMethods implements Interface_NoteTaker {
 	public String listCourses() {
 		// System.out.println("Courses listed in course file \".courses.txt\" ");
 		// List courses in .courses.txt file
+		createCourseFile();
 		String courseList;
 		StringBuilder sb = new StringBuilder();
 		try (Scanner listScanner = new Scanner(myFile);) {
@@ -110,6 +112,7 @@ public class ConsoleMethods implements Interface_NoteTaker {
 
 	@Override
 	public int newNote(String courseNameParameter) {
+		createCourseFile();
 		if (this.findCourse(courseNameParameter)) {
 			// Set Course Note name
 			Instant timeInstant = Instant.now();
